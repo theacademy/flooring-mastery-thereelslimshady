@@ -11,12 +11,13 @@ public interface OrderDao {
 
     Order addOrder(Order order, LocalDate orderDate) throws OrderDataPersistanceException;
     List<Order> getAllOrderByDay (LocalDate orderDate) throws OrderDataPersistanceException;
-    Order removeOrder(int orderNumber, LocalDate orderDate);
+    Order removeOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException;
     Order updateOrder(int orderNumber, LocalDate orderDate, Order order);
     Order getByOrderAndDate (int orderNumber, LocalDate orderDate);
     void save(LocalDate orderDate, Map<Integer, Order> orderMap) throws OrderDataPersistanceException;
     Map<Integer, Order> load(LocalDate orderDate) throws OrderDataPersistanceException;
     void exportAll();
     boolean fileExists(String fileName) throws OrderDataPersistanceException;
+    boolean fileExists(LocalDate orderDate) throws OrderDataPersistanceException;
 
     }

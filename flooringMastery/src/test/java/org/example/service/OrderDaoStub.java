@@ -32,6 +32,9 @@ public class OrderDaoStub implements OrderDao {
 
     @Override
     public Order removeOrder(int orderNumber, LocalDate orderDate) {
+        if (orderNumber==300){
+            return order1;
+        }
         return null;
     }
 
@@ -62,6 +65,14 @@ public class OrderDaoStub implements OrderDao {
 
     @Override
     public boolean fileExists(String fileName) throws OrderDataPersistanceException {
+        return false;
+    }
+
+    @Override
+    public boolean fileExists(LocalDate orderDate) throws OrderDataPersistanceException {
+        if (orderDate.equals(date1)){
+            return true;
+        }
         return false;
     }
 

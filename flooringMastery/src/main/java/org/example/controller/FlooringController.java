@@ -37,6 +37,9 @@ public class FlooringController {
             switch (selection){
                 case 1: displayOrders(); break;
                 case 2: addOrder(); break;
+                //update
+                case 4: removeOrder(); break;
+                //exportAll
                 case 6:
                 default: keepGoing=false; break;
             }
@@ -49,7 +52,7 @@ public class FlooringController {
         return view.menuSelection();
     }
 
-    public Order addOrder(){
+    public void addOrder(){
 
         boolean hasErrors = false;
         Order created = null;
@@ -86,7 +89,6 @@ public class FlooringController {
 
         } while (hasErrors);
 
-        return created;
     }
 
     public void displayOrders(){
@@ -97,6 +99,23 @@ public class FlooringController {
             view.displayOrders(list);
         }catch (OrderDataPersistanceException e){
             view.displayErrorMessage(e.getMessage());
+        }
+
+    }
+
+    public void removeOrder(){
+        LocalDate date = view.askDate();
+        int orderNumber = view.askOrderNumber();
+        try{
+            Order found = service.getOrder(orderNumber, date);
+            if (view.displayOrderConfirmation(found)=='Y'){
+                Order removed = service.removeOrder(orderNumber, date);
+                view.displayOrder(removed);
+            }
+        }catch ( OrderInformationInvalidException
+                | OrderDataPersistanceException e) {
+            view.displayErrorMessage(e.getMessage());
+
         }
 
     }

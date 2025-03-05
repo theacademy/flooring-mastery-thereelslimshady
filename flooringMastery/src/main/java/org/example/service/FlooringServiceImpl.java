@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class FlooringServiceImpl implements FlooringService{
@@ -44,17 +45,33 @@ public class FlooringServiceImpl implements FlooringService{
     }
 
     @Override
-    public Order removeOrder(int orderNumber, LocalDate orderDate) {
-        return null;
+    public Order removeOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException {
+        getOrder(orderNumber, orderDate); // this is dupplicate
+        return orderDao.removeOrder(orderNumber, orderDate);
     }
 
     @Override
-    public Order getOrder(int orderNumber, LocalDate orderDate) {
-        return null;
+    public Order getOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException {
+        List<Order> orders = getAllOrders(orderDate);
+        Order found = orders.stream()
+                .filter(o -> o.getOrderNumber()==orderNumber)
+                .findFirst()
+                .orElse(null);
+
+        if (found == null){
+            throw new OrderInformationInvalidException("Order Number Invalid");
+        }
+
+        return found;
     }
 
     @Override
     public List<Order> getAllOrders(LocalDate orderDate) throws OrderDataPersistanceException {
+
+        if (!orderDao.fileExists(orderDate)){
+
+            throw new OrderInformationInvalidException("No orders for that date");
+        }
         return orderDao.getAllOrderByDay(orderDate);
     }
 

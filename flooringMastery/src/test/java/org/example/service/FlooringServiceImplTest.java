@@ -179,7 +179,65 @@ class FlooringServiceImplTest {
             Assertions.assertEquals(order1, list.get(0));
 
         } catch (OrderDataPersistanceException e){
-            fail("Valid state, should not have throw error");
+            fail("Valid date, should not have throw error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void failGetAllOrdersForFileNotExistant() {
+        LocalDate noOrderDate = LocalDate.parse("2029-01-01");
+        try {
+
+            List<Order> list = service.getAllOrders(noOrderDate);
+            fail("Should have thrown error");
+        } catch (OrderInformationInvalidException e){
+            return;
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void failGetFileNotExistant() {
+        LocalDate noOrderDate = LocalDate.parse("2029-01-01");
+        try {
+            Order found = service.getOrder(order1.getOrderNumber(), noOrderDate);
+            fail("Should have thrown error");
+        } catch (OrderInformationInvalidException e){
+            return;
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void failRemoveOrdernumberNotExistant() {
+        try {
+            Order found = service.getOrder(400, date1);
+            fail("Should have thrown error");
+        } catch (OrderInformationInvalidException e){
+            return;
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void passRemoveOrder() {
+        try {
+            order1.setOrderNumber(300);
+            Order found = service.getOrder(order1.getOrderNumber(), date1);
+            Order removed = service.removeOrder(found.getOrderNumber(), date1);
+            Assertions.assertEquals(order1, removed);
+
+        } catch (OrderInformationInvalidException e){
+            fail("Should have thrown error");
         }
         catch (Exception e){
             fail("Wrong exception");

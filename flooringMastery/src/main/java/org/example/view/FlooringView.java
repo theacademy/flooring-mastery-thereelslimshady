@@ -22,7 +22,7 @@ public class FlooringView {
           int option = 0;
           io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
           io.print("* <<Flooring Program>>");
-          io.print(" * 1. Display Orders");
+          io.print("* 1. Display Orders");
           io.print("* 2. Add an Order");
           io.print("* 3. Edit an Order");
           io.print("* 4. Remove an Order");

@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.model.Order;
+import org.example.service.OrderInformationInvalidException;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -39,8 +40,13 @@ public class OrderDaoFileImpl implements OrderDao{
     }
 
     @Override
-    public Order removeOrder(int orderNumber, LocalDate orderDate) {
-        return null;
+    public Order removeOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException {
+        Map<Integer, Order> orderMap = new HashMap<>();
+        String fileName = String.format(FOLDER_PATH+ orderDate.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt");
+        orderMap = load(orderDate);
+        Order removed = orderMap.remove(orderNumber);
+        save(orderDate, orderMap);
+        return removed;
     }
 
     @Override
@@ -60,15 +66,20 @@ public class OrderDaoFileImpl implements OrderDao{
         String fileName = String.format(FOLDER_PATH+ orderDate.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt");
 
         try {
+            File file = new File(fileName);
             // Create the file if it does not exist
-            if (!fileExists(fileName)) {
-                File file = new File(fileName);
+            if (!fileExists(fileName) && !orderMap.isEmpty()) {
                 if (file.createNewFile()) {
                     System.out.println("File created successfully: " + fileName); //change
                 } else {
                     throw new OrderDataPersistanceException("Could not create the order file");
                 }
             }
+            if (orderMap.isEmpty()){
+               file.delete();
+               return;
+            }
+
             out = new PrintWriter(new FileWriter(fileName));
         }catch (IOException e){
             throw new OrderDataPersistanceException("Could not save order data.", e);
@@ -156,6 +167,12 @@ public class OrderDaoFileImpl implements OrderDao{
 
     }
     public boolean fileExists(String fileName) throws OrderDataPersistanceException {
+        File file = new File(fileName);
+        return file.exists();
+    }
+
+    public boolean fileExists(LocalDate orderDate) throws OrderDataPersistanceException {
+        String fileName = String.format(FOLDER_PATH+ orderDate.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt");
         File file = new File(fileName);
         return file.exists();
     }

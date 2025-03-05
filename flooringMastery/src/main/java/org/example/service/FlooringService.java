@@ -15,8 +15,8 @@ public interface FlooringService {
     Order addOrder(Order order) throws OrderDataPersistanceException;
     Order editOrder(Order order, LocalDate orderDate);
     boolean validateValidOrderInformation (Order order);
-    Order removeOrder(int orderNumber, LocalDate orderDate);
-    Order getOrder(int orderNumber, LocalDate orderDate);
+    Order removeOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException;
+    Order getOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException;
     List<Order> getAllOrders(LocalDate orderDate) throws OrderDataPersistanceException;
     Tax getByState(String state) throws TaxDataPersistanceException, TaxInformationInvalidException;
 
