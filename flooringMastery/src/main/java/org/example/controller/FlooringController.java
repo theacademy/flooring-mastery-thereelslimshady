@@ -7,6 +7,7 @@ import org.example.model.Order;
 import org.example.model.Product;
 import org.example.model.Tax;
 import org.example.service.FlooringService;
+import org.example.service.OrderInformationInvalidException;
 import org.example.service.ProductInformationInvalidException;
 import org.example.service.TaxInformationInvalidException;
 import org.example.view.FlooringView;
@@ -51,9 +52,11 @@ public class FlooringController {
     public Order addOrder(){
 
         boolean hasErrors = false;
+        Order created = null;
         do {
             try {
-                LocalDate orderDate = view.askDate(); // how do we validate the date is in the future?
+                //Right now, if any of the fields have an error, return at the beginning
+                LocalDate orderDate = view.askDate();
                 service.validateDate(orderDate);
 
                 String customerName = view.askCutomerName();
@@ -65,24 +68,25 @@ public class FlooringController {
                 List<Product> products = service.getAllProducts();
                 Product product = view.displayAllProducts(products);
 
-                BigDecimal area = view.askArea(); //validate area
+                BigDecimal area = view.askArea();
+                service.validateArea(area);
 
                 Order order = new Order(orderDate, customerName, tax, product, area); //missing order number
                 if (view.displayOrderConfirmation(order)=='Y') {
-                    Order created = service.addOrder(order);
+                    created = service.addOrder(order);
                     view.displayOrder(created);
                 }
                 hasErrors = false;
+
             }catch (OrderDataPersistanceException | TaxDataPersistanceException | ProductDataPersistanceException |
-                    TaxInformationInvalidException e){
+                    TaxInformationInvalidException |OrderInformationInvalidException e){
                 hasErrors = true;
                 view.displayErrorMessage(e.getMessage());
             }
 
         } while (hasErrors);
 
-
-        return null;
+        return created;
     }
 
     public void displayOrders(){

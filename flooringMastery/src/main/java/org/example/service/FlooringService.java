@@ -7,6 +7,7 @@ import org.example.model.Order;
 import org.example.model.Product;
 import org.example.model.Tax;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface FlooringService {
     void validateDate(LocalDate orderDate);
 
     void validateCustomerName(String customerName);
+
+    void validateArea(BigDecimal area);
 }

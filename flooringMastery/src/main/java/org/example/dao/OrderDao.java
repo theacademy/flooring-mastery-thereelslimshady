@@ -14,7 +14,9 @@ public interface OrderDao {
     Order removeOrder(int orderNumber, LocalDate orderDate);
     Order updateOrder(int orderNumber, LocalDate orderDate, Order order);
     Order getByOrderAndDate (int orderNumber, LocalDate orderDate);
-    void save(LocalDate orderDate, Map<Integer, Order> orderMap);
+    void save(LocalDate orderDate, Map<Integer, Order> orderMap) throws OrderDataPersistanceException;
     Map<Integer, Order> load(LocalDate orderDate) throws OrderDataPersistanceException;
     void exportAll();
-}
+    boolean fileExists(String fileName) throws OrderDataPersistanceException;
+
+    }

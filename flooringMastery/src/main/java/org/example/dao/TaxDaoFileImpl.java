@@ -35,7 +35,7 @@ public class TaxDaoFileImpl implements TaxDao{
         while (scanner.hasNextLine()){
             currentLine = scanner.nextLine();
             currentTax = unmarshallTax(currentLine);
-            taxMap.put(currentTax.getStateName(), currentTax);
+            taxMap.put(currentTax.getStateName().toUpperCase(), currentTax);
         }
         scanner.close();
 
@@ -49,6 +49,6 @@ public class TaxDaoFileImpl implements TaxDao{
     @Override
     public Tax getByName(String state) throws TaxDataPersistanceException {
         load();
-        return taxMap.get(state);
+        return taxMap.get(state.toUpperCase());
     }
 }

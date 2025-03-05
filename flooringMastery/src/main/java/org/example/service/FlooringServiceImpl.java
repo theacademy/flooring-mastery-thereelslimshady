@@ -7,6 +7,7 @@ import org.example.model.Tax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,6 +26,10 @@ public class FlooringServiceImpl implements FlooringService{
 
     @Override
     public Order addOrder(Order order) throws OrderDataPersistanceException {
+        int orderNumber = Order.getId();
+        orderNumber++;
+        order.setOrderNumber(orderNumber);
+        Order.setId(orderNumber);
         return orderDao.addOrder(order, order.getDate());
     }
 
@@ -80,8 +85,18 @@ public class FlooringServiceImpl implements FlooringService{
         if (customerName==null){
             throw new OrderInformationInvalidException("Name cannot be empty");
         }
-        if (!customerName.matches("[a-z][A-Z][0-9][,.]")){
+        if (!customerName.matches("^[a-zA-Z0-9, .]+$")){
             throw new OrderInformationInvalidException("Name can only contain characters (a-z), numbers, comma and periods");
+        }
+    }
+
+    @Override
+    public void validateArea(BigDecimal area) {
+        if (area.compareTo(new BigDecimal("0"))<=0){
+            throw new OrderInformationInvalidException("Area cannot be 0 or negative");
+        }
+        if (area.compareTo(new BigDecimal("100"))>=0){
+            throw new OrderInformationInvalidException("Area cannot be bigger than 100");
         }
     }
 }
