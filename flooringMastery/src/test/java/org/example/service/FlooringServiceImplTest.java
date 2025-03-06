@@ -244,4 +244,72 @@ class FlooringServiceImplTest {
         }
     }
 
+    @Test
+    void passCalculateOrder() { //with weird tax?
+
+        try {
+            Order order2 = new Order(date1, "j", new Tax("QC", "Quebec", new BigDecimal("10")), new Product("Clouds", new BigDecimal("3"), new BigDecimal("1")), new BigDecimal("20"));
+
+            service.calculateOrder(order2);
+            Assertions.assertEquals(new BigDecimal("60"), order2.getMaterialCost());
+            Assertions.assertEquals(new BigDecimal("20"), order2.getLaborCost());
+            Assertions.assertEquals(new BigDecimal("8.0"), order2.getTax());
+            Assertions.assertEquals(new BigDecimal("88.0"), order2.getTotal());
+
+
+        } catch (OrderInformationInvalidException e){
+            fail("Should have thrown error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void passUpdateExistingOrder() {
+        try {
+            order1.setOrderNumber(300);
+            Order edited = service.editOrder(order1, date1);
+            Assertions.assertNotNull(edited);
+            //pass through, so won't test exhaustively
+        } catch (OrderInformationInvalidException e){
+            fail("Should have thrown error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void passExportAll() {
+        try {
+            String backupFolder = service.exportAll();
+            Assertions.assertNotNull(backupFolder);
+            Assertions.assertEquals("TestBackup/DataExport.txt", backupFolder);
+            //pass through, so won't test exhaustively
+        } catch (OrderInformationInvalidException e){
+            fail("Should have thrown error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void passGetInitialOrderId() {
+        try {
+            Order.setId(1);
+            service.getInitialOrderId();
+            int maxId = Order.getId();
+            Assertions.assertEquals(300, maxId);
+
+        } catch (OrderInformationInvalidException e){
+            fail("Should have not thrown error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+
 }

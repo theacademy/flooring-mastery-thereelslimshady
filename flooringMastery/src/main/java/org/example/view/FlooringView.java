@@ -103,6 +103,29 @@ public class FlooringView {
     public BigDecimal askArea(){
         return new BigDecimal(io.readString("Enter Area"));
     }
+
+    public String askEditName(String oldName){
+        return io.readString("Enter new name (" + oldName + ")" );
+    }
+
+    public String askEditState(String oldState) {
+        return io.readString("Enter new state (" + oldState + ")" );
+    }
+
+    public Product askEditProduct(String oldProductType, List<Product> products) {
+        io.print("Enter new Product Type (" + oldProductType + ")" );
+        return displayAllProducts(products);
+    }
+
+    public BigDecimal askEditArea(BigDecimal oldArea) {
+        return io.readBigDecimal("Enter new area (" + oldArea + ")" );
+    }
+
+    public String displayExportCreated(String filename) {
+        return io.readString("Export done under filename" + filename +". Hit enter to go back to menu");
+    }
+
+
 //+ askOrderBanner(): void
 //+ editOrderBanner(): void
 //+ removeOrderBanner(): void

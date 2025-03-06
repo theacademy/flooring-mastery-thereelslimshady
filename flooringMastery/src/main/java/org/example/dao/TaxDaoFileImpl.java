@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -50,5 +51,15 @@ public class TaxDaoFileImpl implements TaxDao{
     public Tax getByName(String state) throws TaxDataPersistanceException {
         load();
         return taxMap.get(state.toUpperCase());
+    }
+
+    @Override
+    public String getNameByAbbr(String abbr) throws TaxDataPersistanceException {
+        load();
+        return taxMap.values().stream()
+                .filter(s -> s.getStateAbbreviation().equalsIgnoreCase(abbr))
+                .map(Tax::getStateName)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Component
 public class FlooringServiceImpl implements FlooringService{
@@ -31,22 +32,18 @@ public class FlooringServiceImpl implements FlooringService{
         orderNumber++;
         order.setOrderNumber(orderNumber);
         Order.setId(orderNumber);
+
         return orderDao.addOrder(order, order.getDate());
     }
 
     @Override
-    public Order editOrder(Order order, LocalDate orderDate) {
-        return null;
+    public Order editOrder(Order order, LocalDate orderDate) throws OrderDataPersistanceException {
+        return orderDao.updateOrder(order.getOrderNumber(), orderDate, order);
     }
 
-    @Override
-    public boolean validateValidOrderInformation(Order order) {
-        return false;
-    }
 
     @Override
     public Order removeOrder(int orderNumber, LocalDate orderDate) throws OrderDataPersistanceException {
-        getOrder(orderNumber, orderDate); // this is dupplicate
         return orderDao.removeOrder(orderNumber, orderDate);
     }
 
@@ -69,7 +66,6 @@ public class FlooringServiceImpl implements FlooringService{
     public List<Order> getAllOrders(LocalDate orderDate) throws OrderDataPersistanceException {
 
         if (!orderDao.fileExists(orderDate)){
-
             throw new OrderInformationInvalidException("No orders for that date");
         }
         return orderDao.getAllOrderByDay(orderDate);
@@ -116,4 +112,29 @@ public class FlooringServiceImpl implements FlooringService{
             throw new OrderInformationInvalidException("Area cannot be bigger than 100");
         }
     }
+    @Override
+    public String getNameByAbbr(String abbr) throws TaxDataPersistanceException {
+        return taxDao.getNameByAbbr(abbr);
+    }
+
+    @Override
+    public void calculateOrder(Order order) {
+        order.calculateOrder();
+    }
+
+    @Override
+    public String exportAll() throws OrderDataPersistanceException {
+        Map<Integer, Order> orderMap = orderDao.loadAll();
+        return orderDao.exportAll(orderMap);
+    }
+
+    @Override
+    public void getInitialOrderId() throws OrderDataPersistanceException {
+        Map<Integer, Order> orderMap = orderDao.loadAll();
+        int maxOrderId = orderMap.keySet().stream()
+                .max(Integer::compareTo)
+                .orElse(0);
+        Order.setId(maxOrderId);
+    }
+
 }

@@ -22,4 +22,9 @@ public class TaxDaoStub implements TaxDao {
        }
         return null;
     }
+
+    @Override
+    public String getNameByAbbr(String abbr) throws TaxDataPersistanceException {
+        return "";
+    }
 }

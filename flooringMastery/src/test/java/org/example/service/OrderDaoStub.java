@@ -40,13 +40,12 @@ public class OrderDaoStub implements OrderDao {
 
     @Override
     public Order updateOrder(int orderNumber, LocalDate orderDate, Order order) {
+        if (orderNumber==300 && orderDate.equals(date1)){
+            return order1;
+        }
         return null;
     }
 
-    @Override
-    public Order getByOrderAndDate(int orderNumber, LocalDate orderDate) {
-        return null;
-    }
 
     @Override
     public void save(LocalDate orderDate, Map<Integer, Order> orderMap) {
@@ -59,9 +58,29 @@ public class OrderDaoStub implements OrderDao {
     }
 
     @Override
-    public void exportAll() {
-
+    public String exportAll(Map<Integer, Order> orders) throws OrderDataPersistanceException {
+        if (!(orders.get(order1.getOrderNumber()) ==null)){
+            return "TestBackup/DataExport.txt";
+        }
+        return null;
     }
+
+    @Override
+    public Map<Integer, Order> loadAll() throws OrderDataPersistanceException {
+        order1.setOrderNumber(300);
+        order1.calculateOrder();
+
+        LocalDate date2 = LocalDate.parse("2025-02-02");
+        Order order2= new Order(date2, "j", new Tax("QC", "Quebec", new BigDecimal("10")), new Product("Clouds", new BigDecimal("3"), new BigDecimal("1")), new BigDecimal("20"));
+        order2.setOrderNumber(29);
+        order2.calculateOrder();
+
+        Map<Integer, Order> testOrder = new HashMap<>();
+        testOrder.put(order1.getOrderNumber(), order1);
+        testOrder.put(order2.getOrderNumber(), order2);
+        return testOrder;
+    }
+
 
     @Override
     public boolean fileExists(String fileName) throws OrderDataPersistanceException {

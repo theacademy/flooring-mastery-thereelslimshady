@@ -46,11 +46,15 @@ public class Order {
         this.taxRate = tax.getTaxRate();
         this.productType = product.getProductType();
         this.costPerSquareFoot= product.getCostPerSquareFoot();
-        this.materialCost = multiply(product.getCostPerSquareFoot(), area);
         this.laborCostPerSquareFoot = product.getLaborCostPerSquareFoot();
-        this.laborCost = multiply(product.getLaborCostPerSquareFoot(), area);
         this.area = area;
-        this.tax = multiply(add(materialCost,laborCost), taxRate.divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP)); //Right?
+    }
+
+    public void calculateOrder(){
+
+        this.materialCost = multiply(this.getCostPerSquareFoot(), area);
+        this.laborCost = multiply(this.laborCostPerSquareFoot, area);
+        this.tax = multiply(add(materialCost,laborCost), taxRate.divide(new BigDecimal("100"), 1, RoundingMode.HALF_UP)); //Right?
         this.total = add(materialCost, laborCost, this.tax);
     }
 
@@ -169,6 +173,7 @@ public class Order {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
 
     @Override
     public String toString() {
