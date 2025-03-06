@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -13,13 +14,14 @@ import java.util.*;
 public class OrderDaoFileImpl implements OrderDao{
     private final String DELIMITER = "," ;
     private String ORDER_FOLDER = "Orders/";
-    private String BACKUP_FOLDER = "Backup2/";
+    private String BACKUP_FOLDER = "Backup/";
     private String FOLDER_PATH;
     private String BACKUP_PATH;
 
     public OrderDaoFileImpl(String path){
         this.ORDER_FOLDER = path;
         this.FOLDER_PATH = String.format(ORDER_FOLDER+"Orders_");
+        this.BACKUP_PATH = String.format(BACKUP_FOLDER+"DataExport.txt");
     }
 
     public OrderDaoFileImpl(String path, String backUpPath){
@@ -29,7 +31,10 @@ public class OrderDaoFileImpl implements OrderDao{
         this.BACKUP_PATH = String.format(BACKUP_FOLDER+"DataExport.txt");
     }
 
-    public OrderDaoFileImpl(){}
+    public OrderDaoFileImpl(){
+        this.FOLDER_PATH = String.format(ORDER_FOLDER+"Orders_");
+        this.BACKUP_PATH = String.format(BACKUP_FOLDER+"DataExport.txt");
+    }
 
     @Override
     public Order addOrder(Order order, LocalDate date) throws OrderDataPersistanceException {
@@ -106,7 +111,11 @@ public class OrderDaoFileImpl implements OrderDao{
      public String marshallOrder(Order order) throws OrderDataPersistanceException {
         try {
             String orderAsText = order.getOrderNumber() + DELIMITER;
-            orderAsText += order.getCustomerName() + DELIMITER;
+            if (order.getCustomerName().contains(",")){
+                orderAsText += order.getCustomerName().replace(',',';') + DELIMITER;
+            }else {
+                orderAsText += order.getCustomerName() + DELIMITER;
+            }
             orderAsText += order.getState() + DELIMITER;
             orderAsText += order.getTaxRate() + DELIMITER;
             orderAsText += order.getProductType() + DELIMITER;
@@ -155,11 +164,11 @@ public class OrderDaoFileImpl implements OrderDao{
     private Order unmarshallOrder(String currentLine) throws OrderDataPersistanceException {
         String[] input = currentLine.split(DELIMITER);
         try {
-            return new Order(
+            Order order = new Order(
                     Integer.parseInt(input[0].trim()),
                     input[1].trim(),
                     input[2].trim(),
-                    new BigDecimal(input[3].trim()),
+                    new BigDecimal(input[3].trim()).setScale(0, RoundingMode.HALF_UP),
                     input[4].trim(),
                     new BigDecimal(input[5].trim()),
                     new BigDecimal(input[6].trim()),
@@ -169,6 +178,11 @@ public class OrderDaoFileImpl implements OrderDao{
                     new BigDecimal(input[10].trim()),
                     new BigDecimal(input[11].trim())
             );
+
+            if (order.getCustomerName().contains(";")) {
+                order.setCustomerName(order.getCustomerName().replace(';', ','));
+            }
+            return order;
         }catch (Exception e){
             throw new OrderDataPersistanceException("Could not read order");
         }

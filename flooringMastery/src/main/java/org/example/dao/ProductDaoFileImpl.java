@@ -13,8 +13,20 @@ import java.util.*;
 @Component
 public class ProductDaoFileImpl implements ProductDao{
     Map<String, Product> productMap = new HashMap<>();
-    private final String FILEPATH = "Data/Products.txt";
+    private final String FILEPATH ;
     private final String DELIMITER = ",";
+
+    public ProductDaoFileImpl(String filepath) {
+        this.FILEPATH = filepath;
+    }
+
+    public ProductDaoFileImpl() {
+        this.FILEPATH = "Data/Products.txt";
+    }
+
+    public Map<String, Product> getProductMap() {
+        return productMap;
+    }
 
     @Override
     public void load() throws ProductDataPersistanceException {
@@ -32,7 +44,7 @@ public class ProductDaoFileImpl implements ProductDao{
         while (scanner.hasNextLine()){
             currentLine = scanner.nextLine();
             currentProduct = unmarshallProduct(currentLine);
-            productMap.put(currentProduct.getProductType(), currentProduct);
+            productMap.put(currentProduct.getProductType().toUpperCase(), currentProduct);
         }
         scanner.close();
 
@@ -40,7 +52,7 @@ public class ProductDaoFileImpl implements ProductDao{
 
     public Product unmarshallProduct(String line){
         String[] input = line.split(DELIMITER);
-        return new Product(input[0].trim(), new BigDecimal(input[1].trim()), new BigDecimal(input[2].trim()));   //ignore CASE!!
+        return new Product(input[0].trim(), new BigDecimal(input[1].trim()), new BigDecimal(input[2].trim()));
     }
 
     @Override
@@ -49,8 +61,4 @@ public class ProductDaoFileImpl implements ProductDao{
         return new ArrayList<>(productMap.values());
     }
 
-    @Override
-    public Product getByProductType(String productType) {
-        return null;
-    }
 }

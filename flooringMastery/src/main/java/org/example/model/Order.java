@@ -6,8 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Order {
-    private static int id = 0;  //what if we start a new app?
-
+    private static int id = 0;
     private int orderNumber;
     private String customerName;
     private String state;
@@ -26,7 +25,7 @@ public class Order {
         this.orderNumber = orderNumber;
         this.customerName = customerName;
         this.state = state;
-        this.taxRate = taxRate;
+        this.taxRate = taxRate.setScale(0, RoundingMode.HALF_UP);
         this.productType = productType;
         this.area = area;
         this.costPerSquareFoot = costPerSquareFoot;
@@ -43,7 +42,7 @@ public class Order {
         this.date = orderDate;
         this.customerName = customerName;
         this.state = tax.getStateAbbreviation();
-        this.taxRate = tax.getTaxRate();
+        this.taxRate =  (tax.getTaxRate()).setScale(0, RoundingMode.HALF_UP);
         this.productType = product.getProductType();
         this.costPerSquareFoot= product.getCostPerSquareFoot();
         this.laborCostPerSquareFoot = product.getLaborCostPerSquareFoot();
@@ -52,10 +51,10 @@ public class Order {
 
     public void calculateOrder(){
 
-        this.materialCost = multiply(this.getCostPerSquareFoot(), area);
-        this.laborCost = multiply(this.laborCostPerSquareFoot, area);
-        this.tax = multiply(add(materialCost,laborCost), taxRate.divide(new BigDecimal("100"), 1, RoundingMode.HALF_UP)); //Right?
-        this.total = add(materialCost, laborCost, this.tax);
+        this.materialCost = multiply(this.getCostPerSquareFoot(), area).setScale(2, RoundingMode.HALF_UP);
+        this.laborCost = multiply(this.laborCostPerSquareFoot, area).setScale(2, RoundingMode.HALF_UP);
+        this.tax = multiply(add(materialCost,laborCost), taxRate.divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
+        this.total = add(materialCost, laborCost, this.tax).setScale(2, RoundingMode.HALF_UP);
     }
 
     public static BigDecimal multiply(BigDecimal first, BigDecimal second){
@@ -138,16 +137,8 @@ public class Order {
         return materialCost;
     }
 
-    public void setMaterialCost(BigDecimal materialCost) {
-        this.materialCost = materialCost;
-    }
-
     public BigDecimal getLaborCost() {
         return laborCost;
-    }
-
-    public void setLaborCost(BigDecimal laborCost) {
-        this.laborCost = laborCost;
     }
 
     public BigDecimal getTax() {
@@ -162,10 +153,6 @@ public class Order {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -174,23 +161,21 @@ public class Order {
         this.date = date;
     }
 
-
     @Override
     public String toString() {
-        return "Order{" +
-                "orderNumber=" + orderNumber +
-                ", customerName='" + customerName + '\'' +
-                ", state='" + state + '\'' +
-                ", taxRate=" + taxRate +
-                ", productType='" + productType + '\'' +
-                ", area=" + area +
-                ", costPerSquareFoot=" + costPerSquareFoot +
-                ", laborCostPerSquareFoot=" + laborCostPerSquareFoot +
-                ", materialCost=" + materialCost +
-                ", laborCost=" + laborCost +
-                ", tax=" + tax +
-                ", total=" + total +
-                '}';
+        return  "Order Number: " + orderNumber +
+                "\nCustomer Name: " + customerName  +
+                "\nState: " + state  +
+                "\nTax Rate: " + taxRate +
+                "\nProduct Type: " + productType  +
+                "\nArea: " + area +
+                "\nCost Per Square Foot: " + costPerSquareFoot +
+                "\nLabor Cost Per Square Foot: " + laborCostPerSquareFoot +
+                "\nMaterial Cost: " + materialCost +
+                "\nLabor Cost: " + laborCost +
+                "\nTax: " + tax +
+                "\n*** Total: " + total +
+                "***\n";
     }
 
     public static int getId() {

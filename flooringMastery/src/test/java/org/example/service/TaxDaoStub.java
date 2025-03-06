@@ -2,9 +2,11 @@ package org.example.service;
 
 import org.example.dao.TaxDao;
 import org.example.dao.TaxDataPersistanceException;
+import org.example.model.Product;
 import org.example.model.Tax;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public class TaxDaoStub implements TaxDao {
     @Override
@@ -25,6 +27,14 @@ public class TaxDaoStub implements TaxDao {
 
     @Override
     public String getNameByAbbr(String abbr) throws TaxDataPersistanceException {
+        if (abbr == "QC"){
+            return "Quebec";
+        }
         return "";
+    }
+
+    @Override
+    public Map<String, Tax> getTaxMap() {
+        return null;
     }
 }

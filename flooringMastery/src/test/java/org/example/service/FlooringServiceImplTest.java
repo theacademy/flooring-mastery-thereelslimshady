@@ -1,6 +1,8 @@
 package org.example.service;
 
 import org.example.dao.OrderDataPersistanceException;
+import org.example.dao.ProductDataPersistanceException;
+import org.example.dao.TaxDataPersistanceException;
 import org.example.model.Order;
 import org.example.model.Product;
 import org.example.model.Tax;
@@ -111,6 +113,20 @@ class FlooringServiceImplTest {
     }
 
     @Test
+    void passGetNamebyAbbr() {
+        try {
+            String expected = service.getNameByAbbr("QC");
+            Assertions.assertEquals("Quebec", expected);
+        } catch (TaxDataPersistanceException e){
+            fail("Should not have throw error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+
+    @Test
     void failValidateNegativeArea() {
         BigDecimal badArea = new BigDecimal("-10");
         try {
@@ -147,6 +163,22 @@ class FlooringServiceImplTest {
             fail("Invalid area, should have throw error");
         } catch (TaxInformationInvalidException e){
             return;
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
+
+    @Test
+    void passGetAllProducts() {
+
+        try {
+            List<Product> list = service.getAllProducts();
+            Assertions.assertEquals(1, list.size());
+            Assertions.assertEquals("Carpet",list.get(0).getProductType());
+
+        } catch (ProductDataPersistanceException e){
+            fail("Should not have thrown error");
         }
         catch (Exception e){
             fail("Wrong exception");
@@ -245,16 +277,16 @@ class FlooringServiceImplTest {
     }
 
     @Test
-    void passCalculateOrder() { //with weird tax?
+    void passCalculateOrder() {
 
         try {
             Order order2 = new Order(date1, "j", new Tax("QC", "Quebec", new BigDecimal("10")), new Product("Clouds", new BigDecimal("3"), new BigDecimal("1")), new BigDecimal("20"));
 
             service.calculateOrder(order2);
-            Assertions.assertEquals(new BigDecimal("60"), order2.getMaterialCost());
-            Assertions.assertEquals(new BigDecimal("20"), order2.getLaborCost());
-            Assertions.assertEquals(new BigDecimal("8.0"), order2.getTax());
-            Assertions.assertEquals(new BigDecimal("88.0"), order2.getTotal());
+            Assertions.assertEquals(new BigDecimal("60.00"), order2.getMaterialCost());
+            Assertions.assertEquals(new BigDecimal("20.00"), order2.getLaborCost());
+            Assertions.assertEquals(new BigDecimal("8.00"), order2.getTax());
+            Assertions.assertEquals(new BigDecimal("88.00"), order2.getTotal());
 
 
         } catch (OrderInformationInvalidException e){
@@ -311,5 +343,24 @@ class FlooringServiceImplTest {
         }
     }
 
+    @Test
+    void passCalculateWeirdTax() {
+        try {
+            Order orderWeirdTax = new Order(1, "J","TX", new BigDecimal("4.45"), "Laminate",new BigDecimal("33"), new BigDecimal("1.75"), new BigDecimal("2.10"), new BigDecimal("57.75"), new BigDecimal("69.30"), new BigDecimal("0"), new BigDecimal("127.5"));
+            service.calculateOrder(orderWeirdTax);
 
+            Assertions.assertEquals(new BigDecimal("4"), orderWeirdTax.getTaxRate());
+            Assertions.assertEquals(new BigDecimal("57.75"), orderWeirdTax.getMaterialCost());
+            Assertions.assertEquals(new BigDecimal("69.30"), orderWeirdTax.getLaborCost());
+            Assertions.assertEquals(new BigDecimal("5.08"), orderWeirdTax.getTax());
+            Assertions.assertEquals(new BigDecimal("132.13"), orderWeirdTax.getTotal());
+
+
+        } catch (OrderInformationInvalidException e){
+            fail("Should have not thrown error");
+        }
+        catch (Exception e){
+            fail("Wrong exception");
+        }
+    }
 }

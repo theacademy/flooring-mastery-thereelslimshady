@@ -1,6 +1,7 @@
 package org.example.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Product {
 
@@ -28,10 +29,21 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "productType='" + productType + '\'' +
-                ", costPerSquareFoot=" + costPerSquareFoot +
-                ", laborCostPerSquareFoot=" + laborCostPerSquareFoot +
-                '}';
+        return   productType +
+                "\nCost Per Square Foot: " + costPerSquareFoot +
+                "\nLabor Cost Per Square Foot: " + laborCostPerSquareFoot +
+                "\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(productType, product.productType) && Objects.equals(costPerSquareFoot, product.costPerSquareFoot) && Objects.equals(laborCostPerSquareFoot, product.laborCostPerSquareFoot);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productType, costPerSquareFoot, laborCostPerSquareFoot);
     }
 }

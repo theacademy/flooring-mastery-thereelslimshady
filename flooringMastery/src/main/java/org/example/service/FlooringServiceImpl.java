@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +85,6 @@ public class FlooringServiceImpl implements FlooringService{
     @Override
     public void validateDate(LocalDate orderDate) {
         boolean isDateInFuture = orderDate.isAfter(LocalDate.now());
-        // validate if it's the correct logic
         if (!isDateInFuture){
             throw new OrderInformationInvalidException("Order date must be in the future");
         }
@@ -94,7 +92,7 @@ public class FlooringServiceImpl implements FlooringService{
 
     @Override
     public void validateCustomerName(String customerName) {
-        //limited to characters [a-z][0-9] as well as periods and comma characters.
+
         if (customerName==null){
             throw new OrderInformationInvalidException("Name cannot be empty");
         }
@@ -136,5 +134,4 @@ public class FlooringServiceImpl implements FlooringService{
                 .orElse(0);
         Order.setId(maxOrderId);
     }
-
 }

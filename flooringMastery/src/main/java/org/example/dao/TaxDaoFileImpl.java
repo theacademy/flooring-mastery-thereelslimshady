@@ -8,8 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,8 +15,20 @@ import java.util.Scanner;
 @Component
 public class TaxDaoFileImpl implements TaxDao{
     Map<String, Tax> taxMap = new HashMap<>();
-    private final String FILEPATH = "Data/Taxes.txt";
-    private final String DELIMITER = ",";
+    private String FILEPATH;
+    private String DELIMITER = ",";
+
+    public Map<String, Tax> getTaxMap() {
+        return taxMap;
+    }
+
+    public TaxDaoFileImpl(String filepath) {
+        this.FILEPATH = filepath;
+    }
+
+    public TaxDaoFileImpl() {
+        this.FILEPATH = "Data/Taxes.txt";
+    }
 
     @Override
     public void load() throws TaxDataPersistanceException {
@@ -44,7 +54,7 @@ public class TaxDaoFileImpl implements TaxDao{
 
     public Tax unmarshallTax(String line){
         String[] input = line.split(DELIMITER);
-        return new Tax(input[0].trim(), input[1].trim(), new BigDecimal(input[2].trim()));   //ignore CASE!!
+        return new Tax(input[0].trim(), input[1].trim(), new BigDecimal(input[2].trim()));
     }
 
     @Override

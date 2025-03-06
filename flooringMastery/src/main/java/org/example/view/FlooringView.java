@@ -63,11 +63,15 @@ public class FlooringView {
     }
 
     public void displayErrorMessage(String e){
-        io.print(e);
+
+        io.print("\n* " + e + "\n");
+
     }
 
     public void displayExit(){
-        io.print("Thank you for using the flooring service");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Thank you for using the flooring service");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
     }
 
     public void displayOrder(Order order){
@@ -78,6 +82,7 @@ public class FlooringView {
         for (Order order: list){
             displayOrder(order);
         }
+        hitEnterForMenu();
     }
 
     public String askCutomerName(){
@@ -89,19 +94,31 @@ public class FlooringView {
     }
 
     public Product displayAllProducts(List<Product> list){
+
+        io.print("* Products *");
+
         for (int i=0; i<list.size(); i++)   {
             io.print((i+1)+". "+list.get(i));
         }
-        return list.get(io.readInt("Choose Product (1-"+ list.size() +")")-1);
+        int index = io.readInt("Choose Product (1-" + list.size() + ")") - 1;
+        try{
+            return list.get(index);
+        }catch (Exception e){throw new InvalidUserInputException("Choose a product from the list");}
     }
 
     public char displayOrderConfirmation( Order order){
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Order");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
         displayOrder(order);
         return io.readString("Confirm this order? Y/N").toUpperCase().charAt(0);
     }
 
     public BigDecimal askArea(){
-        return new BigDecimal(io.readString("Enter Area"));
+        try{
+            return new BigDecimal(io.readString("Enter Area"));
+        }catch (Exception e){throw new InvalidUserInputException("Invalid number");}
+
     }
 
     public String askEditName(String oldName){
@@ -112,26 +129,89 @@ public class FlooringView {
         return io.readString("Enter new state (" + oldState + ")" );
     }
 
-    public Product askEditProduct(String oldProductType, List<Product> products) {
+    public Product askEditProduct(String oldProductType, List<Product> list) {
         io.print("Enter new Product Type (" + oldProductType + ")" );
-        return displayAllProducts(products);
+        for (int i=0; i<list.size(); i++)   {
+            io.print((i+1)+". "+list.get(i));
+        }
+        String input = io.readString("Choose Product (1-"+ list.size() +")");
+        if (input == null || input.trim().isEmpty()){
+            return null;
+        }
+        try{
+            return list.get(Integer.parseInt(input)-1);
+        }catch (Exception e ){
+            throw new InvalidUserInputException("Invalid Choice");
+        }
+
     }
 
     public BigDecimal askEditArea(BigDecimal oldArea) {
-        return io.readBigDecimal("Enter new area (" + oldArea + ")" );
+         String input = io.readString("Enter new area (" + oldArea + ")" );
+        if (input == null || input.trim().isEmpty()){
+            return null;
+        }
+        try{
+            return new BigDecimal(input);
+        }catch (Exception e ){
+            throw new InvalidUserInputException("Invalid Number");
+        }
     }
 
-    public String displayExportCreated(String filename) {
-        return io.readString("Export done under filename" + filename +". Hit enter to go back to menu");
+    public void displayExportCreated(String filename) {
+         io.print("Export done under filename " + filename +".");
+         hitEnterForMenu();
+    }
+
+    public String hitEnterForMenu(){
+        return io.readString("Hit enter to go back to menu");
+    }
+
+    public void displayOrderBanner(){
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Display Orders");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+    }
+
+    public void displayAddBanner(){
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Add Order");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+    }
+
+    public void displayOrderCreated(int orderNumber) {
+        io.print("* Order " + orderNumber + " successfully created.");
+        hitEnterForMenu();
+    }
+
+    public void displayEditBanner() {
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Edit Order");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+
+    }
+
+    public void displayOrderEdited(int orderNumber) {
+        io.print("* Order " + orderNumber + " successfully updated.");
+        hitEnterForMenu();
     }
 
 
-//+ askOrderBanner(): void
-//+ editOrderBanner(): void
-//+ removeOrderBanner(): void
-//+ exportAllDataBanner(): void
+    public void displayRemoveBanner() {
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Remove Order");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
 
-//+ displayOrder(Order): void
-//+ displayOrders(List<Order>): void
+    }
 
+    public void displayRemoved(int orderNumber) {
+        io.print("* Order " + orderNumber + " successfully removed.");
+        hitEnterForMenu();
+    }
+
+    public void displayExportAllBanner() {
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+        io.print("* Export All");
+        io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
+    }
 }

@@ -169,20 +169,38 @@ class OrderDaoFileImplTest {
     @Test
     void failAddSaveLoadOrder() {
         try {
-            order1.setCustomerName("Acme, Inc.");
+            order1.setTax(null);
             Order expected = testDao.addOrder(order1, LocalDate.parse("2025-02-01"));
 
             testDao.load( LocalDate.parse("2025-02-01"));
 
             testDao.removeOrder(order1.getOrderNumber(), LocalDate.parse("2025-02-01"));
 
-            fail("Should not have thrown error");
+            fail("Should have thrown error");
 
         } catch (OrderDataPersistanceException e) {
             return;
 
         }finally {
             new File(String.format(testFolder+ "Orders_" + date1.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt")).delete();
+
+        }
+    }
+
+    @Test
+    void passAddLoadOrderWithCommaInName() {
+        try {
+            String nameWithComma = "Acme, inc.";
+            order1.setCustomerName(nameWithComma);
+            Order expected = testDao.addOrder(order1, LocalDate.parse("2025-02-01"));
+
+            Map<Integer, Order> testOrders =  testDao.load( LocalDate.parse("2025-02-01"));
+            Assertions.assertEquals(nameWithComma, testOrders.get(order1.getOrderNumber()).getCustomerName());
+
+            new File(String.format(testFolder+ "Orders_" + date1.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt")).delete();
+
+        } catch (OrderDataPersistanceException e) {
+            fail("Should not have thrown error");
 
         }
     }

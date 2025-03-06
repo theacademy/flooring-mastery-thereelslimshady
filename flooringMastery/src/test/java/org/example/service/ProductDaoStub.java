@@ -4,7 +4,11 @@ import org.example.dao.ProductDao;
 import org.example.dao.ProductDataPersistanceException;
 import org.example.model.Product;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class ProductDaoStub implements ProductDao {
     @Override
@@ -14,11 +18,13 @@ public class ProductDaoStub implements ProductDao {
 
     @Override
     public List<Product> getAllProducts() throws ProductDataPersistanceException {
-        return null;
+        List<Product> list = new ArrayList<>();
+        list.add(new Product("Carpet",new BigDecimal("2.25"), new BigDecimal("2.10")));
+        return list;
     }
 
     @Override
-    public Product getByProductType(String productType) {
+    public Map<String, Product> getProductMap() {
         return null;
     }
 }

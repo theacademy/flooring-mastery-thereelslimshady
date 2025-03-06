@@ -18,15 +18,7 @@ public class UserIoConsoleImpl implements UserIo{
         return scanner.nextLine().trim();
     }
 
-    @Override
-    public BigDecimal readBigDecimal(String prompt) {
-        System.out.println(prompt);
-        try {
-            return new BigDecimal(scanner.nextLine().trim());
-        }catch (Exception e){
-            throw new InvalidUserInputException("Invalid number provided");
-        }
-    }
+
 
     @Override
     public LocalDate readDate(String prompt) {
