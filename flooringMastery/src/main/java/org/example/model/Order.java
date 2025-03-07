@@ -25,7 +25,7 @@ public class Order {
         this.orderNumber = orderNumber;
         this.customerName = customerName;
         this.state = state;
-        this.taxRate = taxRate.setScale(0, RoundingMode.HALF_UP);
+        this.taxRate = taxRate;
         this.productType = productType;
         this.area = area;
         this.costPerSquareFoot = costPerSquareFoot;
@@ -42,7 +42,7 @@ public class Order {
         this.date = orderDate;
         this.customerName = customerName;
         this.state = tax.getStateAbbreviation();
-        this.taxRate =  (tax.getTaxRate()).setScale(0, RoundingMode.HALF_UP);
+        this.taxRate =  tax.getTaxRate();
         this.productType = product.getProductType();
         this.costPerSquareFoot= product.getCostPerSquareFoot();
         this.laborCostPerSquareFoot = product.getLaborCostPerSquareFoot();

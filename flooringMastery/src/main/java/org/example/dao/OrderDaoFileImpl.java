@@ -168,7 +168,7 @@ public class OrderDaoFileImpl implements OrderDao{
                     Integer.parseInt(input[0].trim()),
                     input[1].trim(),
                     input[2].trim(),
-                    new BigDecimal(input[3].trim()).setScale(0, RoundingMode.HALF_UP),
+                    new BigDecimal(input[3].trim()),
                     input[4].trim(),
                     new BigDecimal(input[5].trim()),
                     new BigDecimal(input[6].trim()),
@@ -233,9 +233,10 @@ public class OrderDaoFileImpl implements OrderDao{
            PrintWriter out = new PrintWriter(new FileWriter(BACKUP_PATH));
 
             String orderAsText;
-            out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total");
+            out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate");
             for (Order currentOrder: orders.values()){
                 orderAsText = marshallOrder(currentOrder);
+                orderAsText+= DELIMITER + (currentOrder.getDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy")));
                 out.println(orderAsText);
                 out.flush();
             }

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -241,7 +240,7 @@ public class FlooringController {
                 if (!newState.isEmpty()) {
                     Tax newTax = service.getByState(newState);
                     found.setState(newTax.getStateAbbreviation());
-                    found.setTaxRate(newTax.getTaxRate().setScale(0, RoundingMode.HALF_UP));
+                    found.setTaxRate(newTax.getTaxRate());
                     isRecalculationNeeded = true;
                 }
                 hasErrors = false;

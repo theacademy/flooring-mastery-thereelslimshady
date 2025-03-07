@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -132,7 +132,7 @@ class OrderDaoFileImplTest {
     @Test
     void passLoadAllAndExportAll() {
         try {
-            LocalDate date2 = LocalDate.parse("2025-02-02");
+            LocalDate date2 = LocalDate.parse("2013-06-02");
             order1.setOrderNumber(300);
             order1.calculateOrder();
             testDao.addOrder(order1, date1);
@@ -142,8 +142,8 @@ class OrderDaoFileImplTest {
             order2.calculateOrder();
             testDao.addOrder(order2, date1);
 
-            Order order3 = new Order(date2, "F", new Tax("AL", "alaska", new BigDecimal("30")), new Product("rain", new BigDecimal("2"), new BigDecimal("3")), new BigDecimal("55"));
-            order3.setOrderNumber(302);
+            Order order3 = new Order(date2, "Albert Einstein", new Tax("KY", "Kentucky", new BigDecimal("6.00")), new Product("Carpet", new BigDecimal("2.25"), new BigDecimal("2.10")), new BigDecimal("217.00"));
+            order3.setOrderNumber(3);
             order3.calculateOrder();
             testDao.addOrder(order3, date2);
 
@@ -157,11 +157,16 @@ class OrderDaoFileImplTest {
             Assertions.assertEquals(expected, backupLocation);
             Assertions.assertTrue(new File(expected).exists());
 
+            BufferedReader br = new BufferedReader(new FileReader(expected));
+            br.readLine(); br.readLine(); br.readLine();
+            String actual = br.readLine();
+            Assertions.assertEquals("3,Albert Einstein,KY,6.00,Carpet,217.00,2.25,2.10,488.25,455.70,56.64,1000.59,06-02-2013", actual);
+
             new File(String.format(testFolder+ "Orders_" + date1.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt")).delete();
             new File(String.format(testFolder+ "Orders_" + date2.format(DateTimeFormatter.ofPattern("MMddyyyy")) + ".txt")).delete();
             new File(String.format(backupFolder+ "DataExport.txt")).delete();
 
-        } catch (OrderDataPersistanceException e) {
+        } catch (OrderDataPersistanceException | IOException e) {
             fail("Should not have thrown error");
         }
     }

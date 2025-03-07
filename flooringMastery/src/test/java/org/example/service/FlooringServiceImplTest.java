@@ -346,14 +346,14 @@ class FlooringServiceImplTest {
     @Test
     void passCalculateWeirdTax() {
         try {
-            Order orderWeirdTax = new Order(1, "J","TX", new BigDecimal("4.45"), "Laminate",new BigDecimal("33"), new BigDecimal("1.75"), new BigDecimal("2.10"), new BigDecimal("57.75"), new BigDecimal("69.30"), new BigDecimal("0"), new BigDecimal("127.5"));
+            Order orderWeirdTax = new Order(2, "Doctor Who","WA", new BigDecimal("9.25"), "Wood",new BigDecimal("243.00"), new BigDecimal("5.15"), new BigDecimal("4.75"), new BigDecimal("57.75"), new BigDecimal("69.30"), new BigDecimal("0"), new BigDecimal("127.5"));
             service.calculateOrder(orderWeirdTax);
 
-            Assertions.assertEquals(new BigDecimal("4"), orderWeirdTax.getTaxRate());
-            Assertions.assertEquals(new BigDecimal("57.75"), orderWeirdTax.getMaterialCost());
-            Assertions.assertEquals(new BigDecimal("69.30"), orderWeirdTax.getLaborCost());
-            Assertions.assertEquals(new BigDecimal("5.08"), orderWeirdTax.getTax());
-            Assertions.assertEquals(new BigDecimal("132.13"), orderWeirdTax.getTotal());
+            Assertions.assertEquals(new BigDecimal("9.25"), orderWeirdTax.getTaxRate());
+            Assertions.assertEquals(new BigDecimal("1251.45"), orderWeirdTax.getMaterialCost());
+            Assertions.assertEquals(new BigDecimal("1154.25"), orderWeirdTax.getLaborCost());
+            Assertions.assertEquals(new BigDecimal("216.51"), orderWeirdTax.getTax());
+            Assertions.assertEquals(new BigDecimal("2622.21"), orderWeirdTax.getTotal());
 
 
         } catch (OrderInformationInvalidException e){
