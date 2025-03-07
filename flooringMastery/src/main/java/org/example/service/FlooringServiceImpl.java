@@ -123,7 +123,7 @@ public class FlooringServiceImpl implements FlooringService{
     @Override
     public String exportAll() throws OrderDataPersistanceException {
         Map<Integer, Order> orderMap = orderDao.loadAll();
-        return orderDao.exportAll(orderMap);
+        return orderDao.saveAll(orderMap);
     }
 
     @Override

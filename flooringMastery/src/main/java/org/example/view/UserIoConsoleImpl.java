@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 @Component
 public class UserIoConsoleImpl implements UserIo{
+
     Scanner scanner = new Scanner(System.in);
+
     public void print(String message){
         System.out.println(message);
     }
@@ -18,9 +20,6 @@ public class UserIoConsoleImpl implements UserIo{
         return scanner.nextLine().trim();
     }
 
-
-
-    @Override
     public LocalDate readDate(String prompt) {
         System.out.println(prompt);
         try {

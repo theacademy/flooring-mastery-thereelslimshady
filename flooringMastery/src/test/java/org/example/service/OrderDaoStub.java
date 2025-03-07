@@ -58,7 +58,7 @@ public class OrderDaoStub implements OrderDao {
     }
 
     @Override
-    public String exportAll(Map<Integer, Order> orders) throws OrderDataPersistanceException {
+    public String saveAll(Map<Integer, Order> orders) throws OrderDataPersistanceException {
         if (!(orders.get(order1.getOrderNumber()) ==null)){
             return "TestBackup/DataExport.txt";
         }

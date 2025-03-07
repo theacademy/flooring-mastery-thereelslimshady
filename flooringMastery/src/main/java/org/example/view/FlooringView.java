@@ -17,6 +17,7 @@ public class FlooringView {
     public FlooringView(UserIo io){
         this.io=io;
     }
+
     public int menuSelection(){
           boolean hasErrors = false;
           int option = 0;
@@ -41,6 +42,7 @@ public class FlooringView {
          }while(hasErrors);
           return option;
     }
+
     public int askOrderNumber(){
        return io.readInt("Enter Order Number");
     }
@@ -63,9 +65,7 @@ public class FlooringView {
     }
 
     public void displayErrorMessage(String e){
-
         io.print("\n* " + e + "\n");
-
     }
 
     public void displayExit(){
@@ -143,7 +143,6 @@ public class FlooringView {
         }catch (Exception e ){
             throw new InvalidUserInputException("Invalid Choice");
         }
-
     }
 
     public BigDecimal askEditArea(BigDecimal oldArea) {
@@ -163,8 +162,8 @@ public class FlooringView {
          hitEnterForMenu();
     }
 
-    public String hitEnterForMenu(){
-        return io.readString("Hit enter to go back to menu");
+    public void hitEnterForMenu(){
+        io.readString("Hit enter to go back to menu");
     }
 
     public void displayOrderBanner(){

@@ -152,7 +152,7 @@ class OrderDaoFileImplTest {
             Assertions.assertTrue(ordersTest.containsValue(order2));
             Assertions.assertTrue(ordersTest.containsValue(order3));
 
-            String backupLocation = testDao.exportAll(ordersTest);
+            String backupLocation = testDao.saveAll(ordersTest);
             String expected = String.format(backupFolder + "DataExport.txt");
             Assertions.assertEquals(expected, backupLocation);
             Assertions.assertTrue(new File(expected).exists());

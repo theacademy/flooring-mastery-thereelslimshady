@@ -68,7 +68,7 @@ public class FlooringController {
         exit();
     }
 
-    public int getMenuAndSelection(){
+    private int getMenuAndSelection(){
         int number = view.menuSelection();
         if (number < 1 || number > 6){
             throw new InvalidUserInputException("Invalid selection. Please choose between 1-6");
@@ -76,7 +76,7 @@ public class FlooringController {
         return number;
     }
 
-    public void addOrder(){
+    private void addOrder(){
 
         boolean hasErrors = false;
         Order created = null;
@@ -165,7 +165,7 @@ public class FlooringController {
 
     }
 
-    public void displayOrders(){
+    private void displayOrders(){
 
         view.displayOrderBanner();
         List<Order> list;
@@ -181,7 +181,7 @@ public class FlooringController {
             }
     }
 
-    public void removeOrder(){
+    private void removeOrder(){
         view.displayRemoveBanner();
         LocalDate date = view.askDate();
         int orderNumber = view.askOrderNumber();
@@ -199,7 +199,7 @@ public class FlooringController {
 
     }
 
-    public void editOrder() {
+    private void editOrder() {
         boolean hasErrors = false;
         view.displayEditBanner();
 
@@ -297,7 +297,7 @@ public class FlooringController {
         }
     }
 
-    public void exportAll() throws OrderDataPersistanceException {
+    private void exportAll() throws OrderDataPersistanceException {
         view.displayExportAllBanner();
         try{
             String filename = service.exportAll();
@@ -308,11 +308,11 @@ public class FlooringController {
 
     }
 
-    public void setup() throws OrderDataPersistanceException {
+    private void setup() throws OrderDataPersistanceException {
         service.getInitialOrderId();
     }
 
-    public void exit(){
+    private void exit(){
         view.displayExit();
     }
 }

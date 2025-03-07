@@ -8,9 +8,18 @@ import java.util.Map;
 
 public interface ProductDao {
 
+    /**
+     * Load all the Product in memory
+     */
     void load() throws ProductDataPersistanceException;
 
+    /**
+     * Retrieves all the Product List from memory
+     */
     List<Product> getAllProducts() throws ProductDataPersistanceException;
 
+    /**
+     * Retrieves all the Product map from . Map of product type and product
+     */
     Map<String, Product> getProductMap();
 }

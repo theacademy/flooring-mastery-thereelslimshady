@@ -1,2 +1,0 @@
-OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
-7,Jay,KY,6,Tile,7,3.50,4.15,24.50,29.05,3.21,56.76
